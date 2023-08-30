@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+  </head>
+
+  <body>
+    <script>
+      var SURVEY_ID = "ze_nps";
+      var QUANT_QUESTION =
+        "No geral, o quanto está satisfeito com o nosso Zé?";
+      var QUAL_QUESTION =
+        "Adicione qualquer informação adicional.";
+      var AVATAR_IMAGE =
+        "https://firebasestorage.googleapis.com/v0/b/product-minds-braze.appspot.com/o/inapp-assets%2Fze-delivery-removebg-preview%201.png?alt=media&token=0d1ac346-2bbc-4e1e-9fbf-c5b64c347810"; // optional
+      var THANKYOU_TEXT = "Obrigado!"; // optional
+      var THANKYOU_SUBTEXT =
+        "Conte conosco, {{${first_name} | default: 'amigo'}}! Estamos continuamente melhorando nosso produto.";
+      var SUBHEADER_TEXT = "Sua opinião é muito importante, {{${first_name} | default: 'amigo'}}!"; // optional
+    </script>
+
+    <script>
+      // these are defaults which should be re-defined in the individual survey
+      var QUANT_QUESTION =
+        QUANT_QUESTION ||
+        console.error("You are missing the QUANT_QUESTION variable") ||
+        "You are missing the QUANT_QUESTION variable";
+      var QUAL_QUESTION =
+        QUAL_QUESTION ||
+        console.error("You are missing the QUAL_QUESTION variable") ||
+        "You are missing the QUAL_QUESTION variable";
+      var SURVEY_ID =
+        SURVEY_ID ||
+        console.error("You are missing the SURVEY_ID variable") ||
+        "You are missing the SURVEY_ID variable";
+      var THANKYOU_TEXT = THANKYOU_TEXT || "Thanks for your feedback!";
+      var SUBHEADER_TEXT = SUBHEADER_TEXT || "";
+      var AVATAR_IMAGE = AVATAR_IMAGE || "";
+    </script>
+    <script>
+      // this section helps with dashboard previews
+      (function () {
+        var isDashboard = (function () {
+          try {
+            void window.top.document;
+            return false;
+          } catch (e) {
+            return true;
+          }
+        })();
+
+        window.iam_config = {
+          isDashboard: isDashboard || location.protocol === "file:",
+          root: isDashboard
+            ? document.documentElement
+            : window.top.document.querySelector(".ab-iam-root"),
+          iframe: isDashboard
+            ? document.documentElement
+            : window.top.document.querySelector("iframe.ab-in-app-message"),
+          parentWindow: isDashboard ? window : window.top,
+        };
+
+        function resize() {
+          setTimeout(function () {
+            var height = document.querySelector(".container").offsetHeight + 60;
+            window.iam_config.iframe.style.height = height + "px";
+          });
+        }
+
+        // initial size
+        resize();
+        // resize on interactions
+        document.body.onclick = resize;
+        // resize when parent is resized
+        window.iam_config.parentWindow.onresize = resize;
+      })();
+    </script>
+    <script>
+      (function () {
+        // adjust size of the parent iframe
+        Object.assign(window.iam_config.iframe.style, {
+          width: "auto",
+          zIndex: "999",
+          border: "unset",
+        });
+        // allows analytics to be captured by web SDK
+        window.iam_config.iframe.setAttribute("class", "ab-start-hidden");
+
+        if (!window.iam_config.isDashboard) {
+          setTimeout(function () {
+            // allows scrolling while message is displayed
+            window.top.document.body.classList.remove("ab-pause-scrolling");
+            window.iam_config.root.setAttribute("class", "");
+          });
+        }
+      })();
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+      :root {
+        --space: 15px;
+
+        --ze-yellow: #ffcc02;
+        --ze-black: #1a1a1a;
+        --ze-white: #fffdff;
+
+        --red: red;
+        --yellow: orange;
+        --green: green;
+      }
+
+      html {
+        font-family: "Roboto", sans-serif;
+        overflow: hidden;
+        height: 100%;
+        font-size: 1rem;
+      }
+
+      @media screen and (min-width: 1024px) {
+        html {
+          font-size: calc(1rem + 1vmin);
+        }
+      }
+
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        background-color: rgba(0, 0 , 0, 0.5);
+        padding: 0 var(--space);
+      }
+
+      .container {
+        position: relative;
+        background: var(--ze-white);
+        box-sizing: border-box;
+        overflow: hidden;
+        border-radius: 4px;
+      }
+
+      .header {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+        color: var(--ze-black);
+      }
+
+      .subheader {
+        text-align: left;
+        font-size: 0.8rem;
+        display: none;
+      }
+
+      #survey-container {
+        padding: var(--space);
+      }
+
+      .border-top {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+      }
+
+      .choices {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .choice:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+      .choice:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
+      .red-choices {
+        color: white !important;
+        background-color: var(--red);
+      }
+
+      .yellow-choices {
+        color: white !important;
+        background-color: var(--yellow);
+      }
+
+      .green-choices {
+        color: white !important;
+        background-color: var(--green);
+      }
+
+      .legend {
+        display: flex;
+        margin: calc(var(--space));
+        flex: 1;
+        justify-content: space-between;
+      }
+
+      #bad-emotion {
+        background: url("https://appboy-images.com/appboy/communication/assets/image_assets/images/5ec2fcf27b648d498c3196b3/original.png")
+          no-repeat;
+        height: 28px;
+        width: 28px;
+        background-size: contains;
+      }
+
+      #good-emotion {
+        background: url("https://appboy-images.com/appboy/communication/assets/image_assets/images/5ec2fcd25b99ac62374445f3/original.png")
+          no-repeat;
+        height: 28px;
+        width: 28px;
+        background-size: contains;
+      }
+
+      .emotions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .choice {
+        font-size: 0.8rem;
+        display: flex;
+        color: #101b24;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex: 1;
+        height: 50px;
+      }
+
+      .choice.selected {
+        padding: 0 var(--space);
+        color: #3a7b3a !important;
+        background-color: transparent;
+        font-weight: bold;
+        justify-content: space-between;
+      }
+
+      .choice.selected:after {
+        content: "\00d7";
+        float: right;
+        font-size: 2rem;
+      }
+
+      .choice:hover {
+        background: lightgrey;
+      }
+
+      #close-button {
+        position: absolute;
+        width: 3vw;
+        min-width: 30px;
+        min-height: 30px;
+        height: 3vw;
+        right: var(--space);
+        padding: 1px;
+        border-radius: 50%;
+        top: var(--space);
+        cursor: pointer;
+        border: none;
+        font-size: 1.5rem;
+      }
+
+      .question {
+        font-size: 0.8rem;
+        margin-top: var(--space);
+        margin-bottom: 0;
+      }
+
+      .feedback {
+        height: 10vh;
+        border: solid 2px #c4c4c4;
+        box-sizing: border-box;
+        resize: none;
+        align-self: stretch;
+        max-width: 100%;
+        touch-action: none;
+        font-size: 1rem;
+        outline: none;
+        padding: var(--space);
+        width: 100%;
+        margin: var(--space) 0;
+        border-radius: 4px;
+      }
+
+      .feedback:focus {
+        border-color: #3a7b3a;
+      }
+
+      .submit-button {
+        width: 100%;
+        padding: var(--space);
+        background: #008294;
+        border-radius: 3px;
+        font-size: 1rem;
+        margin-top: var(--space);
+        text-align: center;
+        color: #ffffff;
+        cursor: pointer;
+        border: none;
+        text-transform: uppercase;
+      }
+
+      .feedback,
+      .submit-button,
+      .question {
+        display: none;
+      }
+
+      .show-submit-without-feedback .submit-button {
+        display: block;
+      }
+
+      .show-submit-without-feedback .legend {
+        display: none;
+      }
+
+      .show-submit .legend {
+        display: none;
+      }
+
+      .show-submit .feedback,
+      .show-submit .submit-button,
+      .show-submit .question {
+        display: block;
+      }
+
+      .confirmation {
+        display: none;
+      }
+
+      .show-confirmation .confirmation {
+        display: block;
+      }
+
+      .show-confirmation #survey-container {
+        display: none;
+      }
+
+      .confirmation {
+        padding: calc(var(--space) * 2) var(--space);
+      }
+
+      #avatar {
+        width: 100%;
+        height: 100%;
+      }
+
+      #avatar-container {
+        width: 80px;
+        height: 80px;
+        padding: var(--space);
+      }
+
+      .avatar-header {
+        display: flex;
+        background-color: var(--ze-black);
+        justify-content: center;
+        padding: var(--space);
+      }
+    </style>
+
+    <div class="container">
+      <div class="avatar-header">
+        <div id="avatar-container">
+          <img id="avatar" src="" />
+        </div>
+      </div>
+      <div id="survey-container">
+        <h5 id="quant-question" class="header"></h5>
+        <p id="subheader" class="subheader"></p>
+        <div class="choices">
+          <div class="choice" data-score="0"></div>
+          <div class="choice" data-score="1"></div>
+          <div class="choice" data-score="2"></div>
+          <div class="choice" data-score="3"></div>
+          <div class="choice" data-score="4"></div>
+          <div class="choice" data-score="5"></div>
+          <div class="choice" data-score="6"></div>
+          <div class="choice" data-score="7"></div>
+          <div class="choice" data-score="8"></div>
+          <div class="choice" data-score="9"></div>
+          <div class="choice" data-score="10"></div>
+        </div>
+        <div class="legend">
+          <div class="emotions">
+            <div id="bad-emotion"></div>
+            <div>Ruim</div>
+          </div>
+          <div class="emotions">
+            <div id="good-emotion"></div>
+            <div>Bom</div>
+          </div>
+        </div>
+        <h5 id="qual-question" class="question"></h5>
+        <textarea
+          id="qual-feedback"
+          class="feedback"
+          maxlength="250"
+        ></textarea>
+        <button
+          id="submit-button"
+          type="button"
+          title="submit"
+          class="submit-button"
+        >
+          Enviar
+        </button>
+      </div>
+
+      <div class="confirmation">
+        <h5 id="thank-you" class="header" style="text-align: center"></h5>
+        <h5
+          id="thank-you-subtext"
+          class="header"
+          style="text-align: center"
+        ></h5>
+      </div>
+
+      <button type="button" title="close" id="close-button">×</button>
+    </div>
+
+    <script>
+      (function () {
+        var quant = document.getElementById("quant-question");
+        var qual = document.getElementById("qual-question");
+        var container = document.getElementById("survey-container");
+        var submitButton = document.getElementById("submit-button");
+        var subheader = document.getElementById("subheader");
+        var closeButton = document.getElementById("close-button");
+        var thankyou = document.getElementById("thank-you");
+        var thankyousubtext = document.getElementById("thank-you-subtext");
+        var choices = document.querySelectorAll(".choice");
+        var avatar = document.getElementById("avatar");
+        var avatarContainer = document.getElementById("avatar-container");
+
+        quant.innerHTML = QUANT_QUESTION;
+        qual.innerHTML = QUAL_QUESTION;
+        thankyou.innerHTML = THANKYOU_TEXT;
+        thankyousubtext.innerHTML = THANKYOU_SUBTEXT;
+        if (SUBHEADER_TEXT) {
+          subheader.innerHTML = SUBHEADER_TEXT;
+          subheader.style.display = "block";
+        }
+        if (AVATAR_IMAGE) {
+          avatar.src = AVATAR_IMAGE;
+          avatarContainer.style.display = "block";
+        }
+
+        choices.forEach(function (node) {
+          var score = +node.dataset.score;
+          // var text = CHOICES[score - 1];
+          node.innerHTML = score;
+
+          if (score < 7) {
+            node.classList.add("red-choices");
+          }
+
+          if (score > 6 && score < 9) {
+            node.classList.add("yellow-choices");
+          }
+
+          if (score > 8) {
+            node.classList.add("green-choices");
+          }
+
+          node.onclick = function () {
+            var alreadySelected = document.querySelector(".choice.selected");
+            if (alreadySelected) {
+              resetChoices();
+            } else {
+              setScore(score);
+
+              score > 8 ? showSubmitButton() : showSubmitWithoutFeedback();
+            }
+          };
+        });
+
+        submitButton.onclick = function () {
+          onSubmit();
+          showConfirmation();
+        };
+
+        function resetChoices() {
+          hideSubmitButton();
+          choices.forEach(function (node) {
+            node.classList.remove("selected");
+            node.style.display = "flex";
+          });
+        }
+
+        function onSubmit() {
+          document.body.classList.add("survey-submitted");
+          var selected = document.querySelector(".choice.selected");
+          var score = selected.dataset.score;
+          var feedback = document.querySelector(".feedback").value || "";
+          appboyBridge
+            .getUser()
+            .setCustomUserAttribute("survey." + SURVEY_ID + ".score", score);
+          if (feedback) {
+            appboyBridge
+              .getUser()
+              .setCustomUserAttribute(
+                "survey." + SURVEY_ID + ".feedback",
+                feedback
+              );
+          }
+
+          appboyBridge.logCustomEvent("survey.completed", {
+            score: score,
+            feedback: feedback,
+            survey_id: SURVEY_ID,
+            url: window.location.href,
+          });
+
+          appboyBridge.logClick(score);
+          appboyBridge.requestImmediateDataFlush();
+        }
+
+        closeButton.onclick = function () {
+          var selected = document.querySelector(".choice.selected");
+          if (!document.body.classList.contains("survey-submitted")) {
+            if (selected) {
+              onSubmit();
+            } else {
+              appboyBridge.logClick("close");
+            }
+          }
+          setTimeout(function () {
+            appboyBridge.closeMessage();
+          });
+        };
+
+        function showSubmitButton() {
+          if (!document.body.classList.contains("show-submit")) {
+            document.body.classList.add("show-submit");
+          }
+        }
+
+        function showSubmitWithoutFeedback() {
+          if (
+            !document.body.classList.contains("show-submit-without-feedback")
+          ) {
+            document.body.classList.add("show-submit-without-feedback");
+          }
+        }
+
+        function hideSubmitButton() {
+          document.body.classList.remove("show-submit");
+          document.body.classList.remove("show-submit-without-feedback");
+        }
+
+        function showConfirmation() {
+          document.body.classList.remove("show-submit");
+          document.body.classList.remove("show-submit-without-feedback");
+          document.body.classList.add("show-confirmation");
+          document.body.click();
+        }
+
+        function setScore(score) {
+          choices.forEach(function (node) {
+            if (+node.dataset.score === +score) {
+              node.classList.add("selected");
+            } else {
+              node.classList.remove("selected");
+              node.style.display = "none";
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

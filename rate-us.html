@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <script
+      src="https://kit.fontawesome.com/a1b2ebf2be.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
 
   <body>
     <script>
       /** Defining constant values **/
-      const SURVEY_ID = "default-survey";
+      const SURVEY_ID = "SURVEY_ID";
 
-      const LOGO_URL =
-        "https://firebasestorage.googleapis.com/v0/b/product-minds-braze.appspot.com/o/inapp-assets%2Ficon-removebg-preview.png?alt=media&token=b8f17e04-f0a8-4431-867f-250cb78037ff";
-      const TITLE = "Title title title title";
-      const SUBTITLE =
-        "subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle";
-      const BUTTON_TEXT = "button text";
-      const CLOSE_PRIMARY_BUTTON = "Close";
+      const LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/product-minds-braze.appspot.com/o/inapp-assets%2Ficon-removebg-preview.png?alt=media&token=b8f17e04-f0a8-4431-867f-250cb78037ff";
+      const TITLE = "Title";
+      const SUBTITLE = "subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle";
 
       const FEEDBACK_TITLE = "Title Feedback";
       const FEEDBACK_SUBTITLE = "Subtitle Feedback";
 
-      const SCORES_LEGEND_LEFT = "Bad";
-      const SCORES_LEGEND_RIGHT = "Good";
+      const BUTTON_TEXT = "BUTTON_TEXT";
+      const CLOSE_PRIMARY_BUTTON = "Close";
+
     </script>
     <script>
-      // this section helps with dashboard previews
+      // This section helps with dashboard previews
       (function () {
         var isDashboard = (function () {
           try {
@@ -71,18 +73,18 @@
         if (!window.iam_config.iframe) {
           return;
         }
-        // adjust size of the parent iframe
+        // Adjust size of the parent iframe
         Object.assign(window.iam_config.iframe.style, {
           width: "auto",
           zIndex: "999",
           border: "unset",
         });
-        // allows analytics to be captured by web SDK
+        // Allows analytics to be captured by web SDK
         window.iam_config.iframe.setAttribute("class", "ab-start-hidden");
 
         if (!window.iam_config.isDashboard) {
           setTimeout(function () {
-            // allows scrolling while message is displayed
+            // Allows scrolling while message is displayed
             window.top.document.body.classList.remove("ab-pause-scrolling");
             window.iam_config.root.setAttribute("class", "");
           });
@@ -160,13 +162,10 @@
         overflow: hidden;
         border-radius: 15px;
         background-color: var(--background-color);
-
         max-width: var(--max-container-width);
-
         display: flex;
         flex-direction: column;
         gap: var(--space);
-
         padding: calc(var(--space) * 2) var(--space);
       }
 
@@ -194,47 +193,22 @@
         font-size: 1rem;
       }
 
-      #scores {
+      .stars {
         display: flex;
         flex: 1;
-
+        gap: calc(1 * var(--space));
         margin: var(--space) 0 0 0;
-      }
-
-      .score {
-        flex: 1;
-        display: flex;
+        text-align: center;
         justify-content: center;
-
-        background-color: var(--scores-color);
-        color: var(--scores-text-color);
-
-        /* border-radius: 100%; */
-        padding: 10px 0;
       }
 
-      .score:hover,
-      .selected {
-        background-color: var(--scores-selected-color);
-        color: var(--scores-selected-text-color);
+      .star {
+        cursor: pointer;
       }
 
-      .score:first-child {
-        border-top-left-radius: 30%;
-        border-bottom-left-radius: 30%;
-      }
-
-      .score:last-child {
-        border-top-right-radius: 30%;
-        border-bottom-right-radius: 30%;
-      }
-
-      #scores-legend {
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 var(--space);
-        color: var(--scores-legend-text-color);
+      .star > i {
+        font-size: 40px;
+        color:var(--primary-color);
       }
 
       .submit-container {
@@ -316,17 +290,22 @@
             <p id="subtitle"></p>
           </div>
 
-          <div id="scores">
-            <div class="score" data-score="1"></div>
-            <div class="score" data-score="2"></div>
-            <div class="score" data-score="3"></div>
-            <div class="score" data-score="4"></div>
-            <div class="score" data-score="5"></div>
-            <div class="score" data-score="6"></div>
-            <div class="score" data-score="7"></div>
-            <div class="score" data-score="8"></div>
-            <div class="score" data-score="9"></div>
-            <div class="score" data-score="10"></div>
+          <div class="stars">
+            <div class="star" data-score="1">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="2">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="3">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="4">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="5">
+              <i class="fa-regular fa-star"></i>
+            </div>
           </div>
 
           <div id="scores-legend">
@@ -364,9 +343,7 @@
       const legendRightEl = document.getElementById("scores-legend-right");
       const logoEl = document.getElementById("logo");
       const closeButtonEl = document.getElementById("close-button");
-      const closePrimaryButtonEl = document.getElementById(
-        "close-primary-button"
-      );
+      const closePrimaryButtonEl = document.getElementById("close-primary-button");
       const contentEl = document.getElementById("content");
       const feedbackTitleEl = document.getElementById("feedback-title");
       const feedbackSubtitleEl = document.getElementById("feedback-subtitle");
@@ -374,8 +351,6 @@
       titleEl.innerHTML = TITLE;
       subtitleEl.innerHTML = SUBTITLE;
       submitButtonEl.innerHTML = BUTTON_TEXT;
-      legendLeftEl.innerHTML = SCORES_LEGEND_LEFT;
-      legendRightEl.innerHTML = SCORES_LEGEND_RIGHT;
       logoEl.src = LOGO_URL;
       feedbackTitleEl.innerHTML = FEEDBACK_TITLE;
       feedbackSubtitleEl.innerHTML = FEEDBACK_SUBTITLE;
@@ -384,16 +359,14 @@
       submitButtonEl.disabled = true;
 
       /** Applying score values **/
-      const scores = document.querySelectorAll(".score");
+      const stars = document.querySelectorAll(".star");
 
-      for (const score of scores) {
-        const scoreInEl = +score.dataset.score;
-        console.log(scoreInEl)
-        score.innerHTML = scoreInEl;
+      for (const star of stars) {
+        const score = +star.dataset.score;
 
-        score.onclick = function () {
+        star.onclick = function () {
           submitButtonEl.disabled = false;
-          addSelectedStyle(score);
+          addSelectedStyle(star);
         };
       }
 
@@ -401,17 +374,19 @@
       closeButtonEl.onclick = onClose;
       closePrimaryButtonEl.onclick = onClose;
 
-      function addSelectedStyle(score) {
-        const scoreInEl = +score.dataset.score;
+      function addSelectedStyle(star) {
+        const score = +star.dataset.score;
 
-        submitButtonEl.setAttribute("data-score", scoreInEl);
+        submitButtonEl.setAttribute("data-score", score);
 
-        for (const scoreInternal of scores) {
-          const scoreInInternalLoop = +scoreInternal.dataset.score;
-
-          scoreInInternalLoop <= scoreInEl
-            ? scoreInternal.classList.add("selected")
-            : scoreInternal.classList.remove("selected");
+        for (const div_star of stars) {
+          const scoreInInternalLoop = +div_star.dataset.score;
+          const star = div_star.querySelector('i');
+          console.log(star)
+          console.log(scoreInInternalLoop)
+          scoreInInternalLoop <= score
+            ? star.classList.add("fa-solid")
+            : star.classList.remove("fa-solid");
         }
       }
 

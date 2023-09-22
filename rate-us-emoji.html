@@ -193,7 +193,7 @@
         font-size: 1rem;
       }
 
-      .stars {
+      .emojis {
         display: flex;
         flex: 1;
         gap: calc(1 * var(--space));
@@ -202,13 +202,29 @@
         justify-content: center;
       }
 
-      .star {
+      .emoji {
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
-      .star > i {
-        font-size: 40px;
-        color:var(--primary-color);
+      .emoji > .emoji-regular {
+        font-size: 45px;
+      }
+
+      .emoji > .emoji-regular:hover {
+        font-size: 60px;
+      }
+
+      .emoji > .emoji-selected {
+        font-size: 60px;
+        opacity: 1;
+      }
+
+      .emoji > .emoji-non-selected {
+        font-size: 45px;
+        opacity: 0.3;
       }
 
       .submit-container {
@@ -290,27 +306,22 @@
             <p id="subtitle"></p>
           </div>
 
-          <div class="stars">
-            <div class="star" data-score="1">
-              <i class="fa-regular fa-star"></i>
+          <div class="emojis">
+            <div class="emoji" data-score="1">
+              <p class="emoji-regular">&#128545</p>
             </div>
-            <div class="star" data-score="2">
-              <i class="fa-regular fa-star"></i>
+            <div class="emoji" data-score="2">
+              <p class="emoji-regular">&#128533</p>
             </div>
-            <div class="star" data-score="3">
-              <i class="fa-regular fa-star"></i>
+            <div class="emoji" data-score="3">
+              <p class="emoji-regular">&#128528</p>
             </div>
-            <div class="star" data-score="4">
-              <i class="fa-regular fa-star"></i>
+            <div class="emoji" data-score="4">
+              <p class="emoji-regular">&#128578</p>
             </div>
-            <div class="star" data-score="5">
-              <i class="fa-regular fa-star"></i>
+            <div class="emoji" data-score="5">
+              <p class="emoji-regular">&#128522</p>
             </div>
-          </div>
-
-          <div id="scores-legend">
-            <div id="scores-legend-left"></div>
-            <div id="scores-legend-right"></div>
           </div>
 
           <div class="submit-container">
@@ -339,12 +350,9 @@
       const titleEl = document.getElementById("title");
       const subtitleEl = document.getElementById("subtitle");
       const submitButtonEl = document.getElementById("submit-button");
-      const legendLeftEl = document.getElementById("scores-legend-left");
-      const legendRightEl = document.getElementById("scores-legend-right");
       const logoEl = document.getElementById("logo");
       const closeButtonEl = document.getElementById("close-button");
       const closePrimaryButtonEl = document.getElementById("close-primary-button");
-      const contentEl = document.getElementById("content");
       const feedbackTitleEl = document.getElementById("feedback-title");
       const feedbackSubtitleEl = document.getElementById("feedback-subtitle");
 
@@ -359,14 +367,14 @@
       submitButtonEl.disabled = true;
 
       /** Applying score values **/
-      const stars = document.querySelectorAll(".star");
+      const emojis = document.querySelectorAll(".emoji");
 
-      for (const star of stars) {
-        const score = +star.dataset.score;
+      for (const emoji of emojis) {
+        const score = +emoji.dataset.score;
 
-        star.onclick = function () {
+        emoji.onclick = function () {
           submitButtonEl.disabled = false;
-          addSelectedStyle(star);
+
         };
       }
 
@@ -374,21 +382,26 @@
       closeButtonEl.onclick = onClose;
       closePrimaryButtonEl.onclick = onClose;
 
-      function addSelectedStyle(star) {
-        const score = +star.dataset.score;
+      document.addEventListener("DOMContentLoaded", function() {
+      const emojis = document.querySelectorAll(".emoji");
 
-        submitButtonEl.setAttribute("data-score", score);
+      emojis.forEach(emoji => {
+          emoji.addEventListener("click", function() {
+              const score = +this.dataset.score;
+              submitButtonEl.setAttribute("data-score", score);
 
-        for (const div_star of stars) {
-          const scoreInInternalLoop = +div_star.dataset.score;
-          const star = div_star.querySelector('i');
-          console.log(star)
-          console.log(scoreInInternalLoop)
-          scoreInInternalLoop <= score
-            ? star.classList.add("fa-solid")
-            : star.classList.remove("fa-solid");
-        }
-      }
+              emojis.forEach(e => {
+                  e.querySelector('.emoji-regular').classList.remove('emoji-selected');
+                  e.querySelector('.emoji-regular').classList.add('emoji-non-selected');
+              });
+
+              this.querySelector('.emoji-regular').classList.remove('emoji-non-selected');
+              this.querySelector('.emoji-regular').classList.add('emoji-selected');
+
+          });
+      });
+  });
+
 
       function onSubmit() {
         const selectedScore = +submitButtonEl.dataset.score;

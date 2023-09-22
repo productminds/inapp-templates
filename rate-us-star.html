@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <script
+      src="https://kit.fontawesome.com/a1b2ebf2be.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <script>
+      /** Defining constant values **/
+      const SURVEY_ID = "SURVEY_ID";
+
+      const LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/product-minds-braze.appspot.com/o/inapp-assets%2Ficon-removebg-preview.png?alt=media&token=b8f17e04-f0a8-4431-867f-250cb78037ff";
+      const TITLE = "Title";
+      const SUBTITLE = "subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle";
+
+      const FEEDBACK_TITLE = "Title Feedback";
+      const FEEDBACK_SUBTITLE = "Subtitle Feedback";
+
+      const BUTTON_TEXT = "BUTTON_TEXT";
+      const CLOSE_PRIMARY_BUTTON = "Close";
+
+    </script>
+    <script>
+      // This section helps with dashboard previews
+      (function () {
+        var isDashboard = (function () {
+          try {
+            void window.top.document;
+            return false;
+          } catch (e) {
+            return true;
+          }
+        })();
+
+        window.iam_config = {
+          isDashboard: isDashboard || location.protocol === "file:",
+          root: isDashboard
+            ? document.documentElement
+            : window.top.document.querySelector(".ab-iam-root"),
+          iframe: isDashboard
+            ? document.documentElement
+            : window.top.document.querySelector("iframe.ab-in-app-message"),
+          parentWindow: isDashboard ? window : window.top,
+        };
+
+        function resize() {
+          setTimeout(function () {
+            if (!window.iam_config.iframe) {
+              return;
+            }
+
+            var height = document.querySelector("#background").offsetHeight + 60;
+            window.iam_config.iframe.style.height = height + "px";
+          });
+        }
+
+        // initial size
+        resize();
+        // resize on interactions
+        document.body.onclick = resize;
+        // resize when parent is resized
+        window.iam_config.parentWindow.onresize = resize;
+      })();
+    </script>
+    <script>
+      (function () {
+        if (!window.iam_config.iframe) {
+          return;
+        }
+        // Adjust size of the parent iframe
+        Object.assign(window.iam_config.iframe.style, {
+          width: "auto",
+          zIndex: "999",
+          border: "unset",
+        });
+        // Allows analytics to be captured by web SDK
+        window.iam_config.iframe.setAttribute("class", "ab-start-hidden");
+
+        if (!window.iam_config.isDashboard) {
+          setTimeout(function () {
+            // Allows scrolling while message is displayed
+            window.top.document.body.classList.remove("ab-pause-scrolling");
+            window.iam_config.root.setAttribute("class", "");
+          });
+        }
+      })();
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+      :root {
+        --space: 15px;
+        --max-container-width: 500px;
+
+        --main-grey: #eaeaea;
+        --dark-grey: #cccccc;
+        --main-black: #2f2f2f;
+        --main-white: #eaeaea;
+        --main-orange: #ff9010;
+        --main-blue: #758bfc;
+
+        --background-color: var(--main-grey);
+        --primary-color: var(--main-blue);
+
+        --scores-color: var(--dark-grey);
+        --scores-text-color: var(--main-white);
+        --scores-selected-color: var(--primary-color);
+        --scores-selected-text-color: var(--main-white);
+        --scores-legend-text-color: var(--main-black);
+        --close-button-color: var(--dark-grey);
+        --close-button-text-color: var(--main-white);
+        --submit-button-color: var(--primary-color);
+        --submit-button-disabled-color: var(--dark-grey);
+        --submit-button-disabled-text-color: var(--main-white);
+        --submit-button-text-color: var(--main-white);
+        --title-color: var(--main-black);
+        --subtitle-color: var(--main-black);
+
+        --font-size: 16px;
+      }
+
+      html {
+        font-family: "Roboto", sans-serif;
+        overflow: hidden;
+        height: 100%;
+        font-size: var(--font-size);
+      }
+
+      @media screen and (min-width: 1024px) {
+        html {
+          font-size: calc(1rem + 1vmin);
+        }
+      }
+
+      body {
+        margin: 0;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.267);
+        padding: 0 var(--space);
+      }
+
+      #background {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #container {
+        position: relative;
+        background: var(--main-grey);
+        flex: 1;
+        box-sizing: border-box;
+        overflow: hidden;
+        border-radius: 15px;
+        background-color: var(--background-color);
+        max-width: var(--max-container-width);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space);
+        padding: calc(var(--space) * 2) var(--space);
+      }
+
+      #content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space);
+      }
+
+      .description {
+        padding: 0 var(--space);
+        text-align: center;
+      }
+
+      .description > h1,
+      p {
+        margin: 0;
+        margin-top: var(--space);
+        color: var(--title-color);
+        font-size: 1.5em;
+      }
+
+      .description > p {
+        color: var(--title-color);
+        font-size: 1rem;
+      }
+
+      .stars {
+        display: flex;
+        flex: 1;
+        gap: calc(1 * var(--space));
+        margin: var(--space) 0 0 0;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .star {
+        cursor: pointer;
+      }
+
+      .star > i {
+        font-size: 40px;
+        color:var(--primary-color);
+      }
+
+      .submit-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .primary-button {
+        border-radius: 15px;
+        padding: var(--space);
+        font-size: 1em;
+        text-transform: uppercase;
+        background-color: var(--submit-button-color);
+        color: var(--submit-button-text-color);
+        border: none;
+        cursor: pointer;
+        margin-top: var(--space);
+      }
+
+      .primary-button:disabled {
+        background-color: var(--submit-button-disabled-color);
+        color: var(--submit-button-disabled-text-color);
+      }
+
+      #close-button {
+        position: absolute;
+        top: var(--space);
+        right: var(--space);
+        border: none;
+
+        padding: 8px 16px;
+
+        font-size: 1.5rem;
+        border-radius: 50%;
+        background-color: var(--close-button-color);
+        color: var(--close-button-text-color);
+      }
+
+      #logo-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+
+      #logo-container > img {
+        max-height: 120px;
+      }
+
+      #feedback {
+        display: none;
+      }
+
+      .survey-submitted #feedback {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space);
+      }
+
+      .survey-submitted #content {
+        display: none;
+      }
+    </style>
+
+    <div id="background">
+      <div id="container">
+        <button id="close-button">×</button>
+
+        <div id="logo-container">
+          <img id="logo" />
+        </div>
+
+        <div id="content">
+          <div class="description">
+            <h1 id="title"></h1>
+          </div>
+
+          <div class="description">
+            <p id="subtitle"></p>
+          </div>
+
+          <div class="stars">
+            <div class="star" data-score="1">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="2">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="3">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="4">
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="star" data-score="5">
+              <i class="fa-regular fa-star"></i>
+            </div>
+          </div>
+
+          <div class="submit-container">
+            <button id="submit-button" class="primary-button"></button>
+          </div>
+        </div>
+
+        <div id="feedback">
+          <div class="description">
+            <h1 id="feedback-title"></h1>
+          </div>
+
+          <div class="description">
+            <p id="feedback-subtitle"></p>
+          </div>
+
+          <div class="submit-container">
+            <button id="close-primary-button" class="primary-button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /** Applying constant values **/
+      const titleEl = document.getElementById("title");
+      const subtitleEl = document.getElementById("subtitle");
+      const submitButtonEl = document.getElementById("submit-button");
+      const logoEl = document.getElementById("logo");
+      const closeButtonEl = document.getElementById("close-button");
+      const closePrimaryButtonEl = document.getElementById("close-primary-button");
+      const contentEl = document.getElementById("content");
+      const feedbackTitleEl = document.getElementById("feedback-title");
+      const feedbackSubtitleEl = document.getElementById("feedback-subtitle");
+
+      titleEl.innerHTML = TITLE;
+      subtitleEl.innerHTML = SUBTITLE;
+      submitButtonEl.innerHTML = BUTTON_TEXT;
+      logoEl.src = LOGO_URL;
+      feedbackTitleEl.innerHTML = FEEDBACK_TITLE;
+      feedbackSubtitleEl.innerHTML = FEEDBACK_SUBTITLE;
+      closePrimaryButtonEl.innerHTML = CLOSE_PRIMARY_BUTTON;
+
+      submitButtonEl.disabled = true;
+
+      /** Applying score values **/
+      const stars = document.querySelectorAll(".star");
+
+      for (const star of stars) {
+        const score = +star.dataset.score;
+
+        star.onclick = function () {
+          submitButtonEl.disabled = false;
+          addSelectedStyle(star);
+        };
+      }
+
+      submitButtonEl.onclick = onSubmit;
+      closeButtonEl.onclick = onClose;
+      closePrimaryButtonEl.onclick = onClose;
+
+      function addSelectedStyle(star) {
+        const score = +star.dataset.score;
+
+        submitButtonEl.setAttribute("data-score", score);
+
+        for (const div_star of stars) {
+          const scoreInInternalLoop = +div_star.dataset.score;
+          const star = div_star.querySelector('i');
+          console.log(star)
+          console.log(scoreInInternalLoop)
+          scoreInInternalLoop <= score
+            ? star.classList.add("fa-solid")
+            : star.classList.remove("fa-solid");
+        }
+      }
+
+      function onSubmit() {
+        const selectedScore = +submitButtonEl.dataset.score;
+
+        appboyBridge
+          .getUser()
+          .setCustomUserAttribute(
+            "survey." + SURVEY_ID + ".score",
+            selectedScore
+          );
+
+        appboyBridge.logCustomEvent("survey.completed", {
+          score: selectedScore,
+          survey_id: SURVEY_ID,
+          url: window.location.href,
+        });
+
+        appboyBridge.logClick(selectedScore);
+        appboyBridge.requestImmediateDataFlush();
+
+        document.body.classList.add("survey-submitted");
+      }
+
+      function onClose() {
+        appboyBridge.logClick("close");
+        
+        setTimeout(function () {
+          appboyBridge.closeMessage();
+        });
+      }
+    </script>
+  </body>
+</html>

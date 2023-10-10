@@ -23,8 +23,8 @@
       const FEEDBACK_SUBTITLE = "Subtitle Feedback";
 
       const BUTTON_TEXT = "BUTTON_TEXT";
-      const CLOSE_PRIMARY_BUTTON = "Close";
-
+      const CLOSE_PRIMARY_BUTTON_TEXT = "Close";
+      const SHOULD_LOG_DISMISS_AS_CUSTOM_EVENT = false;
     </script>
     <script>
       // This section helps with dashboard previews
@@ -109,11 +109,6 @@
         --background-color: var(--main-grey);
         --primary-color: var(--main-blue);
 
-        --scores-color: var(--dark-grey);
-        --scores-text-color: var(--main-white);
-        --scores-selected-color: var(--primary-color);
-        --scores-selected-text-color: var(--main-white);
-        --scores-legend-text-color: var(--main-black);
         --close-button-color: var(--dark-grey);
         --close-button-text-color: var(--main-white);
         --submit-button-color: var(--primary-color);
@@ -362,7 +357,7 @@
       logoEl.src = LOGO_URL;
       feedbackTitleEl.innerHTML = FEEDBACK_TITLE;
       feedbackSubtitleEl.innerHTML = FEEDBACK_SUBTITLE;
-      closePrimaryButtonEl.innerHTML = CLOSE_PRIMARY_BUTTON;
+      closePrimaryButtonEl.innerHTML = CLOSE_PRIMARY_BUTTON_TEXT;
 
       submitButtonEl.disabled = true;
 
@@ -427,6 +422,14 @@
 
       function onClose() {
         appboyBridge.logClick("close");
+
+        if (SHOULD_LOG_DISMISS_AS_CUSTOM_EVENT) {
+          appboyBridge.logCustomEvent("survey.dismiss", {
+            score: selectedScore,
+            survey_id: SURVEY_ID,
+            url: window.location.href,
+          });
+        }
         
         setTimeout(function () {
           appboyBridge.closeMessage();

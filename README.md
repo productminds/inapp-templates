@@ -8,11 +8,11 @@ Stay connected with Product Minds: <br />
 Website: productminds.com <br />
 Email for support: tech@productminds.io 
 
-## Previews
+## 📱 Previews
 
 Herebelow there is the description and preview as a GIF of each of the templates we have available and how this is seen on mobile devices.
 
-### **NPS Survey**
+### 🏅 **NPS Survey**
 
   This template provides the user with the possibility of selecting a score from 1 to 5 and give feedback as a free form in the cases the user has responded from 4 to 5, to finally show them the confirmation page.
 
@@ -20,15 +20,15 @@ Herebelow there is the description and preview as a GIF of each of the templates
   <img src="assets/nps.gif" alt="Alt text" style="width:200px;">
 </div>
 
-### **Rate US with stars**
+### ⭐ **Rate us with stars**
 
-  This template provides the user with the possibility of rating *something* on a scale of 1 to 5 stars. This In App uses the fontawesome library for the style of the stars. Once, it is selected and uploaded the confirmation page is showed to the user.
+  This template provides the user with the possibility of rating *something* on a scale of 1 to 10 stars. This In App uses the fontawesome library for the style of the stars. Once, it is selected and uploaded the confirmation page is showed to the user.
 
 <div align="center">
   <img src="assets/rate-us-stars.gif" alt="Alt text" style="width:200px;">
 </div>
 
-### **Rate US with emojis**
+### 😀 **Rate us with emojis**
 
   This template provides the user with the possibility of rating *something* on a scale of emojis being the worst score: 😡 and the best: 😊. Once, it is selected and uploaded the confirmation page is showed to the user.
 
@@ -36,13 +36,13 @@ Herebelow there is the description and preview as a GIF of each of the templates
   <img src="assets/rate-us-emojis.gif" alt="Alt text" style="width:200px;">
 </div>
 
-## How to customize it
+## 🎨 How to customize it
 
 You should customize the variables inside script. We have the following options:
 
 ### JS variables
 
-#### General variables
+- #### General variables
 
 <table>
   <tr>
@@ -92,7 +92,7 @@ You should customize the variables inside script. We have the following options:
   </tr>
 </table>
 
-#### NPS - Specific variables
+- #### NPS - Specific variables
 
 <table>
   <tr>
@@ -114,7 +114,7 @@ You should customize the variables inside script. We have the following options:
 
 ### Styling (CSS variables)
 
-#### General variables
+- #### General variables
 
 <table>
   <tr>
@@ -219,7 +219,7 @@ You should customize the variables inside script. We have the following options:
   </tr>
 </table>
 
-#### NPS - Specific variables
+- #### NPS - Specific variables
 
 <table>
   <tr>
@@ -254,16 +254,81 @@ You should customize the variables inside script. We have the following options:
   </tr>
 </table>
 
-## To use it
+## 🔍 How data is tracked in Braze?
 
 When interacting with the surveys, the code will do the following:
 
-- Log a custom event with the name `survey.completed` with these properties:
-  - score: SELECTED SCORE
-  - survey_id - SURVEY ID DEFINED
-  - url: window.location.href
-- Set a custom property with the name `survey.${SURVEY_ID}.score` on user profile. The value is the score selected.
-- Log a custom event with the name `survery.dismiss` with these properties:
-  - score: SELECTED SCORE (if its exists)
-  - survey_id: SURVEY ID DEFINED
-  - url: window.location.href
+- **Log a custom event with the name `survey.completed`**
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">WHEN?</p>
+<p style="margin-left:50px;">When the user clicks on the SAVE button</p>
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">PROPERTIES</p>
+<ul style="margin-left:50px;">
+  <li>score: SELECTED SCORE</li>
+  <li>survey_id: SURVEY ID DEFINED</li>
+  <li>url: window.location.href</li>
+</ul>
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">NEXT?</p>
+<p style="margin-left:50px;">The feedback screen is shown</p>
+
+
+- **Set a custom user attribute with the name `survey.${SURVEY_ID}.score`**
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">WHEN?</p>
+<p style="margin-left:50px;">When the user clicks on the SAVE button</p>
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">VALUE</p>
+<p style="margin-left:50px;">The score selected transformed it to a number</p>
+
+
+- **Log a custom event with the name `survey.dismiss`**
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">WHEN?</p>
+<p style="margin-left:50px;">When the user clicks on the CLOSE button in the feedback screen or the cross on the left right on every screen.</p>
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">PROPERTIES</p>
+<ul style="margin-left:50px;">
+  <li>score: SELECTED SCORE (*if available*)</li>
+  <li>survey_id: SURVEY ID DEFINED</li>
+  <li>url: window.location.href</li>
+</ul>
+<p style="margin-left:50px;font-weight:bold;color:#758bfc">NEXT?</p>
+<p style="margin-left:50px;">The In App Message is closed</p>
+
+
+
+## 👀 How do I test this?
+
+1. Download the HTML from this repository. If you are new to GIT you can download all of our packages as a ZIP clicking on the **<> Code** button and then on Download ZIP.
+
+<div style="margin-left:50px;">
+  <img src="assets/download-zip.png" alt="Download zip" style="width:200px;">
+</div>
+
+2. Copy the HTML content of the template you want to use.
+
+3. Open the Braze dashboard and create a new In App Messaging Campaign
+
+<div style="margin-left:50px;">
+  <img src="assets/new-campaign.png" alt="Create campaign" style="width:200px;">
+</div>
+
+4. On the First Step of the carving of the campaign: Compose Messages, go to the **Message Variants** tab and select the option of **Traditional Editor**. Then select **Custom Code**.
+
+<div style="margin-left:50px;display: flex; align-items: center;">
+  <img src="assets/traditional-editor.png" alt="Create campaign" style="width:200px;margin-left:10px;">
+  <img src="assets/custom-code.png" alt="Create campaign" style="width:200px;margin-left:10px;">
+</div>
+
+5. Continue on the First Step, go to the **Preview** tab and got to the paste the HTML content you copied on the 2nd step into the HTML input of the message.
+
+<div style="margin-left:50px;">
+  <img src="assets/paste-content.png" alt="Create campaign" style="width:200px;">
+</div>
+
+6. In the **Preview** tab, go to the **Test** tab and enter the External ID or Email to identify your user or device in Braze. Send the test.
+
+<div style="margin-left:50px;">
+  <img src="assets/send-test.png" alt="Create campaign" style="width:200px;">
+</div>
+
+7. If everything went ok, you will receive a push notification to your device. Click on it and Braze will open your App and show to you the In App Message you are testing.
+
+<div style="margin-left:50px;">
+  <img src="assets/push.jpg" alt="Create campaign" style="width:200px;">
+</div>

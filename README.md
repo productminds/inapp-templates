@@ -12,19 +12,29 @@ Email for support: tech@productminds.io
 
 Herebelow there is the description and preview as a GIF of each of the templates we have available and how this is seen on mobile devices.
 
-- ### NPS Survey
+### **NPS Survey**
 
   This template provides the user with the possibility of selecting a score from 1 to 5 and give feedback as a free form in the cases the user has responded from 4 to 5, to finally show them the confirmation page.
 
-  ![alt text](assets/nps.gif)
+<div align="center">
+  <img src="assets/nps.gif" alt="Alt text" style="width:200px;">
+</div>
 
-- ### Rate US with starts
+### **Rate US with stars**
 
   This template provides the user with the possibility of rating *something* on a scale of 1 to 5 stars. This In App uses the fontawesome library for the style of the stars. Once, it is selected and uploaded the confirmation page is showed to the user.
 
-- ### Rate US with emojis
+<div align="center">
+  <img src="assets/rate-us-stars.gif" alt="Alt text" style="width:200px;">
+</div>
+
+### **Rate US with emojis**
 
   This template provides the user with the possibility of rating *something* on a scale of emojis being the worst score: 😡 and the best: 😊. Once, it is selected and uploaded the confirmation page is showed to the user.
+
+<div align="center">
+  <img src="assets/rate-us-emojis.gif" alt="Alt text" style="width:200px;">
+</div>
 
 ## How to customize it
 

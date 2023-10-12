@@ -7,6 +7,25 @@ Our collection of in-app templates is designed to supercharge your app developme
 Stay connected with Product Minds: <br />
 Website: productminds.com <br />
 Email for support: tech@productminds.io 
+
+## Previews
+
+Herebelow there is the description and preview as a GIF of each of the templates we have available and how this is seen on mobile devices.
+
+- ### NPS Survey
+
+  This template provides the user with the possibility of selecting a score from 1 to 5 and give feedback as a free form in the cases the user has responded from 4 to 5, to finally show them the confirmation page.
+
+  ![alt text](assets/nps.gif)
+
+- ### Rate US with starts
+
+  This template provides the user with the possibility of rating *something* on a scale of 1 to 5 stars. This In App uses the fontawesome library for the style of the stars. Once, it is selected and uploaded the confirmation page is showed to the user.
+
+- ### Rate US with emojis
+
+  This template provides the user with the possibility of rating *something* on a scale of emojis being the worst score: 😡 and the best: 😊. Once, it is selected and uploaded the confirmation page is showed to the user.
+
 ## How to customize it
 
 You should customize the variables inside script. We have the following options:

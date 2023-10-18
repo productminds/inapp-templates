@@ -12,17 +12,20 @@
 
       const LOGO_URL =
         "https://firebasestorage.googleapis.com/v0/b/product-minds-braze.appspot.com/o/inapp-assets%2Ficon-removebg-preview.png?alt=media&token=b8f17e04-f0a8-4431-867f-250cb78037ff";
-      const TITLE = "Title title title title";
+      const TITLE =
+        "We want to know your opinion, {{${first_name} | default: 'Minder' }}!";
       const SUBTITLE =
-        "subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle subtitle";
-      const BUTTON_TEXT = "button text";
-      const CLOSE_PRIMARY_BUTTON = "Close";
+        "Which score best describe your experience with MinderApp?";
+      const BUTTON_TEXT = "Submit";
+      const CLOSE_PRIMARY_BUTTON_TEXT = "Close";
 
-      const FEEDBACK_TITLE = "Title Feedback";
-      const FEEDBACK_SUBTITLE = "Subtitle Feedback";
+      const FEEDBACK_TITLE = "Thank you!";
+      const FEEDBACK_SUBTITLE = "We are constantly improving our product";
 
       const SCORES_LEGEND_LEFT = "Bad";
       const SCORES_LEGEND_RIGHT = "Good";
+
+      const SHOULD_LOG_DISMISS_AS_CUSTOM_EVENT = false;
     </script>
     <script>
       // this section helps with dashboard previews
@@ -53,7 +56,8 @@
               return;
             }
 
-            var height = document.querySelector("#background").offsetHeight + 60;
+            var height =
+              document.querySelector("#background").offsetHeight + 60;
             window.iam_config.iframe.style.height = height + "px";
           });
         }
@@ -61,7 +65,7 @@
         // initial size
         resize();
         // resize on interactions
-        document.body.onclick = resize;
+        // document.body.onclick = resize;
         // resize when parent is resized
         window.iam_config.parentWindow.onresize = resize;
       })();
@@ -112,8 +116,8 @@
         --scores-selected-color: var(--primary-color);
         --scores-selected-text-color: var(--main-white);
         --scores-legend-text-color: var(--main-black);
-        --close-button-color: var(--dark-grey);
-        --close-button-text-color: var(--main-white);
+        --close-button-color: var(--background-color);
+        --close-button-text-color: var(--dark-grey);
         --submit-button-color: var(--primary-color);
         --submit-button-disabled-color: var(--dark-grey);
         --submit-button-disabled-text-color: var(--main-white);
@@ -122,6 +126,9 @@
         --subtitle-color: var(--main-black);
 
         --font-size: 16px;
+
+        --button-border-radius: 15px;
+        --scores-border-radius: 15px;
       }
 
       html {
@@ -199,6 +206,8 @@
         flex: 1;
 
         margin: var(--space) 0 0 0;
+        background-color: var(--scores-color);
+        border-radius: var(--scores-border-radius);
       }
 
       .score {
@@ -206,27 +215,26 @@
         display: flex;
         justify-content: center;
 
-        background-color: var(--scores-color);
         color: var(--scores-text-color);
+        background-clip: padding-box;
 
-        /* border-radius: 100%; */
         padding: 10px 0;
       }
 
       .score:hover,
       .selected {
-        background-color: var(--scores-selected-color);
-        color: var(--scores-selected-text-color);
+        background-color: var(--scores-selected-color) !important;
+        color: var(--scores-selected-text-color) !important;
       }
 
       .score:first-child {
-        border-top-left-radius: 30%;
-        border-bottom-left-radius: 30%;
+        border-radius: var(--scores-border-radius) 0 0
+          var(--scores-border-radius);
       }
 
       .score:last-child {
-        border-top-right-radius: 30%;
-        border-bottom-right-radius: 30%;
+        border-radius: 0 var(--scores-border-radius) var(--scores-border-radius)
+          0;
       }
 
       #scores-legend {
@@ -237,6 +245,10 @@
         color: var(--scores-legend-text-color);
       }
 
+      #scores-legend > div {
+        font-weight: 600;
+      }
+
       .submit-container {
         display: flex;
         justify-content: center;
@@ -244,8 +256,8 @@
       }
 
       .primary-button {
-        border-radius: 15px;
-        padding: var(--space);
+        border-radius: var(--button-border-radius);
+        padding: var(--space) calc(var(--space) * 2);
         font-size: 1em;
         text-transform: uppercase;
         background-color: var(--submit-button-color);
@@ -266,9 +278,9 @@
         right: var(--space);
         border: none;
 
-        padding: 8px 16px;
+        padding: 2px 12px 4px 12px;
 
-        font-size: 1.5rem;
+        font-size: 2rem;
         border-radius: 50%;
         background-color: var(--close-button-color);
         color: var(--close-button-text-color);
@@ -379,7 +391,7 @@
       logoEl.src = LOGO_URL;
       feedbackTitleEl.innerHTML = FEEDBACK_TITLE;
       feedbackSubtitleEl.innerHTML = FEEDBACK_SUBTITLE;
-      closePrimaryButtonEl.innerHTML = CLOSE_PRIMARY_BUTTON;
+      closePrimaryButtonEl.innerHTML = CLOSE_PRIMARY_BUTTON_TEXT;
 
       submitButtonEl.disabled = true;
 
@@ -388,7 +400,7 @@
 
       for (const score of scores) {
         const scoreInEl = +score.dataset.score;
-        console.log(scoreInEl)
+
         score.innerHTML = scoreInEl;
 
         score.onclick = function () {
@@ -438,8 +450,17 @@
       }
 
       function onClose() {
+        const selectedScore = +submitButtonEl.dataset.score;
         appboyBridge.logClick("close");
-        
+
+        if (SHOULD_LOG_DISMISS_AS_CUSTOM_EVENT) {
+          appboyBridge.logCustomEvent("survey.dismiss", {
+            score: selectedScore,
+            survey_id: SURVEY_ID,
+            url: window.location.href,
+          });
+        }
+
         setTimeout(function () {
           appboyBridge.closeMessage();
         });
